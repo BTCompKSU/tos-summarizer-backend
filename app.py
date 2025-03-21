@@ -20,13 +20,13 @@ Text:
 {tos_text}
 """
 
-    response = client.chat.completions.create(
-	    model="gpt-4",
-	    messages=[{"role": "user", "content": prompt}],
-	    temperature=0.2
-	)
-	
-	full_text = response.choices[0].message.content
+    response = openai.ChatCompletion.create(  # Fixed this line
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+
+    full_text = response["choices"][0]["message"]["content"]  # Corrected syntax
 
     split = full_text.split("Red Flags:")
     summary = split[0].strip()
@@ -40,6 +40,6 @@ Text:
 @app.route('/')
 def hello():
     return "TOS Summarizer is live!"
-	
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000, debug=True)
