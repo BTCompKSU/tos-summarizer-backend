@@ -33,10 +33,10 @@ Text:
     # Cleanly separate summary and red flags
     summary, red_flags = full_text.split("Red Flags:") if "Red Flags:" in full_text else (full_text, "None found.")
 
-	return jsonify({
-	    "summary": markdown.markdown(summary.strip()),  # Convert Markdown to HTML
-	    "redFlags": markdown.markdown(red_flags.strip())
-	})
+    return jsonify({
+        "summary": markdown.markdown(summary.strip()),  # Convert Markdown to HTML
+        "redFlags": markdown.markdown(red_flags.strip())
+    })
 
 @app.route('/')
 def hello():
