@@ -20,13 +20,14 @@ Text:
 {tos_text}
 """
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.2
-    )
+    response = client.chat.completions.create(
+	    model="gpt-4",
+	    messages=[{"role": "user", "content": prompt}],
+	    temperature=0.2
+	)
+	
+	full_text = response.choices[0].message.content
 
-    full_text = response['choices'][0]['message']['content']
     split = full_text.split("Red Flags:")
     summary = split[0].strip()
     red_flags = split[1].strip() if len(split) > 1 else "None found."
