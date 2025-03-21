@@ -1,3 +1,9 @@
+// Use Marked.js for Markdown to HTML conversion
+function parseMarkdown(markdownText) {
+    return DOMPurify.sanitize(marked.parse(markdownText)); // Prevents XSS attacks
+}
+
+
 async function summarizeTOS() {
     const text = document.body.innerText;
     if (text.length < 1000 || !text.toLowerCase().includes("terms")) return;
@@ -38,14 +44,16 @@ async function summarizeTOS() {
         const data = await response.json();
         
         // Replace loading message with actual summary
-        loadingOverlay.innerHTML = `
-            <h3>🧠 AI TOS Summary</h3>
-            <p><strong>Key Points:</strong></p>
-            ${formatAsList(data.summary)}
-            <br>
-            <p style="color: red;"><strong>Red Flags:</strong></p>
-            ${formatAsList(data.redFlags)}
-        `;
+		loadingOverlay.innerHTML = `
+		    <h3>🧠 AI TOS Summary</h3>
+		    <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
+		        <p><strong>Key Points:</strong></p>
+		        <div>${parseMarkdown(data.summary)}</div>  <!-- Markdown now properly rendered -->
+		        <br>
+		        <p style="color: red;"><strong>Red Flags:</strong></p>
+		        <div>${parseMarkdown(data.redFlags)}</div>
+		    </div>
+		`;
         loadingOverlay.style.height = "500px"; // Expand for more readable content
         loadingOverlay.style.overflowY = "scroll"; // Enable scrolling
 
