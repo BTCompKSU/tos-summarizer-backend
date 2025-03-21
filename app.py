@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # Corrected OpenAI client setup
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # New OpenAI client
 
 @app.route('/summarize', methods=['POST'])
 def summarize():
@@ -20,21 +20,21 @@ Text:
 {tos_text}
 """
 
-    response = client.chat.completions.create(  # Corrected OpenAI v1.x syntax
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
+    response = client.chat.completions.create(  # NEW OpenAI API format
+        model="gpt-4-turbo",
+        messages=[{"role": "system", "content": "You are a legal expert summarizing Terms of Service."},
+                  {"role": "user", "content": prompt}],
         temperature=0.2
     )
 
-    full_text = response.choices[0].message.content  # Corrected response format
+    full_text = response.choices[0].message.content  # Correct way to extract response
 
-    split = full_text.split("Red Flags:")
-    summary = split[0].strip()
-    red_flags = split[1].strip() if len(split) > 1 else "None found."
+    # Cleanly separate summary and red flags
+    summary, red_flags = full_text.split("Red Flags:") if "Red Flags:" in full_text else (full_text, "None found.")
 
     return jsonify({
-        "summary": summary,
-        "redFlags": red_flags
+        "summary": summary.strip(),
+        "redFlags": red_flags.strip()
     })
 
 @app.route('/')
