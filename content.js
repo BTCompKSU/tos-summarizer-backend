@@ -29,7 +29,7 @@ async function summarizeTOS() {
 
     // Send text to the AI
     try {
-        const response = await fetch("http://127.0.0.1:5000/summarize", {
+        const response = await fetch("https://tos-summarizer-backend.onrender.com", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text })
